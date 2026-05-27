@@ -1,8 +1,8 @@
-# nash-transcriptomics-analysis
+# NASH transcriptomics analysis
 RNA-seq differential expression and pathway enrichment analysis in NASH.
 
 This repository contains a bioinformatics workflow for the analysis of RNA-seq data from NASH samples:
-- SRA download and FASTQ format generation;
+- SRA download and FASTQ file generation;
 - Transcript quantification using Salmon;
 - PCA analysis;
 - Differential expression analysis with DESeq2;

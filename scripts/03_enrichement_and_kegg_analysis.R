@@ -1,7 +1,6 @@
 # Enrichment and KEGG analysis
 # Dataset: GSE126848
 
-
 library(clusterProfiler)
 library(org.Hs.eg.db)
 library(enrichplot)
@@ -105,7 +104,7 @@ dotplot(
 dev.off()
 
 # 3. ORA
-gene_sets <- clusterProfiler::read.gmt("ref/c5.go.bp.v2024.1.Hs.symbols.gmt")
+gene_sets <- clusterProfiler::read.gmt("metadata/c5.go.bp.v2024.1.Hs.symbols.gmt")
 res_gene_rank <- res_all[order(res$padj),]
 
 # split genes by direction
@@ -128,13 +127,11 @@ enriched_all <- clusterProfiler::enricher(
 	TERM2GENE = gene_sets
 )
 
-
 write.csv(
 	as.data.frame(enriched_all),
 	"results/ORA_all_NASH_vs_HEALTHY.csv",
 	row.names = FALSE
 )
-
 
 write.csv(
 	as.data.frame(enriched_up),
@@ -161,7 +158,7 @@ dev.off()
 
 # . KEGG
 Human.GRCh38.p13.annot <- read.table(
-	"ref/Human.GRCh38.p13.annot.tsv", 
+	"metadata/Human.GRCh38.p13.annot.tsv", 
 	header=T, 
 	sep="\t", 
 	fill= T, 

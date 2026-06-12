@@ -1,0 +1,44 @@
+#!/bin/bash
+
+# RNA-seq preprocessing and transcript quantification
+# Dataset: GSE126848
+
+GSE=GSE126848
+SRR_LIST=$(cat reads/${GSE}/SRR_list_${GSE})
+READS_DIRECTORY=reads/${GSE}
+SRA_BACKUP_DIRECTORY=backup/sra/${GSE}
+INDEX_FOLDER=index/salmon_index_refgenie
+BOOTSTRAPS=30
+THREADS=40
+SAMPLES=$(cat srr.list)
+
+
+# 1. Download SRA files from NCBI and convert to FASTQ
+
+
+for i in $SRR_LIST; do
+	prefetch -p $i -O $READS_DIRECTORY;
+	fasterq-dump -v --threads 15 $READS_DIRECTORY/$i/${i}.sra -O $READS_DIRECTORY/$i/; #extract .fastq files from .sra and save them in the same folder
+	gzip -v $READS_DIRECTORY/$i/${i}.fastq;
+	mkdir -p $SRA_BACKUP_DIRECTORY/$i;
+	mv -v $READS_DIRECTORY/$i/${i}.sra $SRA_BACKUP_DIRECTORY/$i;
+        #do echo $i;
+done
+
+# 2. Transcript quantification using Salmon v1.9.0
+
+for SAMPLE in $SAMPLES;
+do
+        mkdir -p $READS_DIRECTORY/$SAMPLE/salmon_results/;
+        salmon19 quant \
+        -i $INDEX_FOLDER \
+        -l A \
+	-1 $READS_DIRECTORY/$SAMPLE/${SAMPLE}_1.fastq.gz \
+        -2 $READS_DIRECTORY/$SAMPLE/${SAMPLE}_2.fastq.gz \
+#       -r $READS_DIRECTORY/$SAMPLE/$SAMPLE.fastq.gz \ # if single-end
+        -p $THREADS \
+        -o $READS_DIRECTORY/$SAMPLE/salmon_results/ \
+        --gcBias \
+        --validateMappings \
+        --numBootstraps $BOOTSTRAPS;
+done

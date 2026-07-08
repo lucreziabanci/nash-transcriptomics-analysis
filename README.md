@@ -32,7 +32,7 @@ plots/
 
 # Required annotation files
 The following files should be manually downloaded and placed inside the metadata/ directory before running enrichment analyses:
-c5.go.bp.v2024.1.Hs.symbols.gmt
+`c5.go.bp.v2024.1.Hs.symbols.gmt`
 Human.GRCh38.p13.annot.tsv
 
 # Main R packages
